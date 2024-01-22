@@ -29,10 +29,10 @@ def load_and_print_json_files(directory):
 def write_summaries(directory_path):
   all_data, all_filenames = load_and_print_json_files(directory_path)
   for i, data in enumerate(all_data):
-    # todo: delete hardcoded
-    if all_filenames[i] == "Open-Octocs-C":
-      continue
-    transcript_dir_prefix = "tournaments/wudc_korea_2023/transcripts/"
+    
+  
+    transcript_dir_prefix = "tournaments/wudc_korea_2023_part_2/"
+    
     filename = transcript_dir_prefix +  all_filenames[i]
     notes = prompting_independently(filename)
     dir = "output/" + filename
@@ -41,7 +41,7 @@ def write_summaries(directory_path):
     print(f"processed {filename} ", i)
     # debug 
     
-
+# Todo should be passing this path as a command line argument
 if __name__ == "__main__":
-  directory_path = "tournaments/wudc_korea_2023/transcripts"
+  directory_path = "tournaments/wudc_korea_2023_part_2"
   write_summaries(directory_path)

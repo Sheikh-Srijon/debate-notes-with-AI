@@ -50,17 +50,22 @@ def read_file(file_path, data_type="txt"):
 
 
 def get_prompt():
-    text = """I will give you a british parliamentary debating speech. You are a note taker, you will write a debate casebook. 
+    text = """I will give you a british parliamentary debating speech. You are a note taker. 
     There might be overlap between the speeches. If there is overlap of the transcript from the previous speaker,
     you should avoid it. Usually the following phrases indicate transition between speakers "Thank you for your speech.
     I would like to call _ of opposition/government/proposition/affirmative. Next speaker. 
     Thank you, Mr/Miss Speaker".
+    
+    More context about the debate: Speaker 1 and 3 are Opening Government. Speaker 2 and 4 are Opening Opposition.
+    Speaker 5 and 7 are Closing Government. Speaker 6 and 8 are Closing Opposition. The Governments OPPOSE Oppositions. 
+    
     You will extract a case out of the speech 
     transcript in the following structure. Use the structure for inspiration.Follow it strictly EXCEPT for the Arguments.
     The arguments should be implicitly following the given structure. 
-                Stance: What the speaker  supports 
-                Burden: What the speaker is aiming to prove
-                Setup: How the speaker defines or sets up the debate
+    
+    Write as if you are the speaker. Use first person narration. 
+                Stance: What do we support
+                Setup: How the debate is defined or setup? Whats the context of the debate?
                 Arguments: Each argument comprises of (Statement, Reasoning, Example) schema. You should be detailed and write an argument with these subpoints. 
                   1. Statement: What the argument is
                   2. Reasoning: Why the argument is true
@@ -80,8 +85,7 @@ def get_prompt():
     More guideline on style/writing:
     1. Be concise. Prefer short sentences.
     2. Use the speaker's phrases as much as possible.
-    3. Write as if you are the speaker. Use first person. Don't write like "the speaker said X is true". 
-    Write "X is true"
+    3. Write as if you are the speaker. Use first person. 
                 Is that clear?
                 
                 Here's the transcript: {transcript}
@@ -90,15 +94,6 @@ def get_prompt():
     return text
 
 
-
-# def getYoutubeTranscript():
-#     video_url = "https://www.youtube.com/watch?v=Ys0Sgicnjz4&t=951s"
-#     audio_file = (
-#         YouTube(video_url)
-#         .streams.filter(only_audio=True)
-#         .first()
-#         .download(filename="audio.mp3")
-#     )
 
 
 def num_tokens_from_string(string: str, encoding_name="cl100k_base") -> int:
@@ -118,9 +113,9 @@ def prompting_independently(filename):
   for i,item in enumerate(data):
     chain = prompt | llm | StrOutputParser()
     response = chain.invoke({"transcript": item["speech"]})
-    # response = response.replace("\n", "")
-    notes.append(f"Speaker {i} \n" + response)
-    print("processed ", i, " ", len(response))
+    # ! speaker i+1 because starts at 0
+    notes.append(f"Speaker {i+1} \n" + response)
+    print("processed ", i+1, " ", len(response))
     # debug 
     
     
